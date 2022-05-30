@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 
@@ -29,12 +30,20 @@ public class GameController {
     public void loadGameFromFile() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("加载游戏");
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("标签文件(*.txt)", "txt");
-        fileChooser.setFileFilter(filter);
-        File file = null;
+//        FileNameExtensionFilter filter = new FileNameExtensionFilter("标签文件(*.txt)", "txt");
+//        fileChooser.setFileFilter(filter);
         int select = fileChooser.showOpenDialog(fileChooser);
         if (select == JFileChooser.CANCEL_OPTION) return ;
         try {
+            //TODO:HERE
+            File file = fileChooser.getSelectedFile();
+            String name = file.getName();
+            String[] strArray = name.split("\\.");
+            int suffixIndex = strArray.length -1;
+            if(!Objects.equals(strArray[suffixIndex], "txt")){
+                JOptionPane.showMessageDialog(null, "文件格式错误！","提示",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileChooser.getSelectedFile())));
             List<String> chessData = new ArrayList<>(0);
             while (true){
