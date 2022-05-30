@@ -97,6 +97,10 @@ public class Chessboard extends JComponent {
     public void swapChessComponents(ChessComponent chess1, ChessComponent chess2) {
         // Note that chess1 has higher priority, 'destroys' chess2 if exists.
         ChessComponent IsKing = chess2;
+        boolean passPawn = false;
+        if (chess1 instanceof PawnChessComponent && recorder.size() != 0){
+            passPawn = ((PawnChessComponent) chess1).passPawn(chessComponents,chess2.getChessboardPoint());
+        }
         ChessRecorder step = new ChessRecorder(chess1.getChessboardPoint().getX(),chess1.getChessboardPoint().getY(),chess1.getName().charAt(0),
                 chess2.getChessboardPoint().getX(),chess2.getChessboardPoint().getY(),chess2.getName().charAt(0),currentColor);
         if (!(chess2 instanceof EmptySlotComponent)) {
@@ -127,6 +131,15 @@ public class Chessboard extends JComponent {
         if ((chess1 instanceof PawnChessComponent) && (chess1.getChessboardPoint().getX() == 0 || chess1.getChessboardPoint().getX() == 7)){
             PawnChange(chess1);
             step.setSpecial("change pawn");
+        }
+        if (chess1 instanceof PawnChessComponent && recorder.size() != 0){
+            if (passPawn){
+                ChessComponent chessComponent = new EmptySlotComponent(new ChessboardPoint(row2,col1), calculatePoint(row2,col1), clickController, CHESS_SIZE);
+                chessComponent.setVisible(true);
+                putChessOnBoard(chessComponent);
+                chessComponents[row2][col1].repaint();
+                step.setSpecial("en passant");
+            }
         }
         recorder.add(step);
         chessComponents[row1][col1].repaint();
@@ -224,8 +237,15 @@ public class Chessboard extends JComponent {
         }
         for (int i = 9; i < chessData.size(); i ++){
             String step = chessData.get(i);
-            ChessColor color = step.charAt(13) == 'b' ? ChessColor.BLACK : ChessColor.WHITE;
-            recorder.add(new ChessRecorder((int)step.charAt(2),(int)step.charAt(4),step.charAt(6),(int)step.charAt(8),(int)step.charAt(10),step.charAt(12),color));
+            System.out.println(step);
+            ChessColor color = step.charAt(12) == 'b' ? ChessColor.BLACK : ChessColor.WHITE;
+            recorder.add(new ChessRecorder(step.charAt(1) - 48, step.charAt(3) - 48,step.charAt(5), step.charAt(7)- 48, step.charAt(9)- 48,step.charAt(11),color));
+            System.out.println(recorder.get(recorder.size() - 1).getSourceX());
+            System.out.println(recorder.get(recorder.size() - 1).getSourceY());
+            if (step.length() >= 14){
+                recorder.get(recorder.size() - 1).setSpecial(step.substring(13));
+                System.out.println(recorder.get(recorder.size() - 1).getSpecial());
+            }
         }
     }
 
@@ -348,6 +368,13 @@ public class Chessboard extends JComponent {
                 ChessComponent chessComponent = new EmptySlotComponent(new ChessboardPoint(desX,desY), calculatePoint(desX,desY), clickController, CHESS_SIZE);
                 chessComponent.setVisible(true);
                 putChessOnBoard(chessComponent);
+            }
+        }
+        if (recorder.get(recorder.size() - 1).getSpecial().equals("en passant")){
+            if (recorder.get(recorder.size() - 1).getSourceChessColor() == ChessColor.BLACK){
+                initPawnOnBoard(souX,desY,ChessColor.WHITE);
+            }else if (recorder.get(recorder.size() - 1).getSourceChessColor() == ChessColor.WHITE){
+                initPawnOnBoard(souX,desY,ChessColor.BLACK);
             }
         }
         recorder.remove(recorder.size() - 1);

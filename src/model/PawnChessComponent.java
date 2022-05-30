@@ -1,5 +1,6 @@
 package model;
 
+import controller.ChessRecorder;
 import controller.ClickController;
 import view.ChessboardPoint;
 
@@ -113,6 +114,10 @@ public class PawnChessComponent extends ChessComponent{
                     && !(chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)){
                 return true;
             }
+            //过路兵
+            else if (clickController.getChessboard().getRecorder().size() != 0) {
+                return passPawn(chessComponents,destination);
+            }
         }
         return false;
     }
@@ -132,5 +137,20 @@ public class PawnChessComponent extends ChessComponent{
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
         }
+    }
+
+    public boolean passPawn(ChessComponent[][] chessComponents, ChessboardPoint destination){
+        ChessboardPoint source = getChessboardPoint();
+        ChessRecorder lastStep = clickController.getChessboard().getRecorder().get(clickController.getChessboard().getRecorder().size() - 1);
+        if (chessColor == ChessColor.BLACK && destination.getX() - source.getX() == 1 && source.getX() == 4
+                && (chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)
+                && lastStep.getSourceName() == 'p' && lastStep.getSourceX() - lastStep.getDesX() == 2 && lastStep.getSourceY() == destination.getY()) {
+            return true;
+        } else if (chessColor == ChessColor.WHITE && destination.getX() - source.getX() == -1 && source.getX() == 3
+                && (chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent)
+                && lastStep.getSourceName() == 'P' && lastStep.getSourceX() - lastStep.getDesX() == -2 && lastStep.getSourceY() == destination.getY()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -7,6 +7,10 @@ public class ClickController {
     private final Chessboard chessboard;
     private ChessComponent first;
 
+    public Chessboard getChessboard() {
+        return chessboard;
+    }
+
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
     }

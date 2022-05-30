@@ -147,4 +147,8 @@ public class ChessRecorder {
     public void setSpecial(String special) {
         this.special = special;
     }
+
+    public String getSpecial() {
+        return special;
+    }
 }

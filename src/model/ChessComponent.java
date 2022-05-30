@@ -33,7 +33,7 @@ public abstract class ChessComponent extends JComponent {
     /**
      * handle click event
      */
-    private ClickController clickController;
+    protected ClickController clickController;
     protected String name;
 
     @Override
