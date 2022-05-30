@@ -29,11 +29,11 @@ public class KingChessComponent extends ChessComponent{
      */
     public void loadResource() throws IOException {
         if (KING_WHITE == null) {
-            KING_WHITE = ImageIO.read(new File("./images/king-white.png"));
+            KING_WHITE = ImageIO.read(new File("./images/白王.png"));
         }
 
         if (KING_BLACK == null) {
-            KING_BLACK = ImageIO.read(new File("./images/king-black.png"));
+            KING_BLACK = ImageIO.read(new File("./images/黑王.png"));
         }
     }
 
@@ -74,26 +74,16 @@ public class KingChessComponent extends ChessComponent{
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
         ChessboardPoint source = getChessboardPoint();
-//        if (source.getX() == destination.getX()) {
-//            int row = source.getX();
-//            for (int col = Math.min(source.getY(), destination.getY()) + 1;
-//                 col < Math.max(source.getY(), destination.getY()); col++) {
-//                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
-//                    return false;
-//                }
-//            }
-//        } else if (source.getY() == destination.getY()) {
-//            int col = source.getY();
-//            for (int row = Math.min(source.getX(), destination.getX()) + 1;
-//                 row < Math.max(source.getX(), destination.getX()); row++) {
-//                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
-//                    return false;
-//                }
-//            }
-//        } else { // Not on the same row or the same column.
-//            return false;
-//        }
-        return true;
+        if (source.getX() == destination.getX() && Math.abs(source.getY() - destination.getY()) == 1) {
+            return true;
+        }
+        else if (source.getY() == destination.getY() && Math.abs(source.getX() - destination.getX()) == 1){
+            return true;
+        }
+        else if(Math.abs(source.getX() - destination.getX()) == 1 && Math.abs(source.getY() - destination.getY()) == 1){
+            return true;
+        }
+        return false;
     }
 
 

@@ -16,7 +16,6 @@ public class BishopChessComponent extends ChessComponent{
      */
     private static Image BISHOP_WHITE;
     private static Image BISHOP_BLACK;
-
     /**
      * 车棋子对象自身的图片，是上面两种中的一种
      */
@@ -29,11 +28,11 @@ public class BishopChessComponent extends ChessComponent{
      */
     public void loadResource() throws IOException {
         if (BISHOP_WHITE == null) {
-            BISHOP_WHITE = ImageIO.read(new File("./images/bishop-white.png"));
+            BISHOP_WHITE = ImageIO.read(new File("./images/白象.png"));
         }
 
         if (BISHOP_BLACK == null) {
-            BISHOP_BLACK = ImageIO.read(new File("./images/bishop-black.png"));
+            BISHOP_BLACK = ImageIO.read(new File("./images/黑象.png"));
         }
     }
 

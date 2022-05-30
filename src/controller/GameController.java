@@ -2,6 +2,7 @@ package controller;
 
 import model.ChessColor;
 import view.Chessboard;
+import view.CurrentPlayerLabel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -19,9 +20,13 @@ public class GameController {
         this.chessboard = chessboard;
     }
 
+    public Chessboard getChessboard() {
+        return chessboard;
+    }
+
     public void loadGameFromFile() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("保存游戏");
+        fileChooser.setDialogTitle("加载游戏");
         FileNameExtensionFilter filter = new FileNameExtensionFilter("标签文件(*.txt)", "txt");
         fileChooser.setFileFilter(filter);
         File file = null;
@@ -39,11 +44,11 @@ public class GameController {
             if (chessData.get(0).length() != 8 || chessData.get(1).length() != 8 || chessData.get(2).length() != 8 ||
                     chessData.get(3).length() != 8 || chessData.get(4).length() != 8 || chessData.get(5).length() != 8 || chessData.get(6).length() != 8 ||
                     chessData.get(7).length() != 8){
-                JOptionPane.showMessageDialog(null, "棋盘并非8*8");
+                JOptionPane.showMessageDialog(null, "棋盘并非8*8","提示",JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (chessData.size() != 9 || !(chessData.get(8).equals("Black") || chessData.get(8).equals("White"))){
-                JOptionPane.showMessageDialog(null, "导入数据只有棋盘，没有下一步行棋的方的提示");
+                JOptionPane.showMessageDialog(null, "导入数据只有棋盘，没有下一步行棋的方的提示","提示",JOptionPane.ERROR_MESSAGE);
                 return;
             }
             for (int i = 0; i < 8; i ++){
@@ -51,7 +56,7 @@ public class GameController {
                     char chess = chessData.get(i).charAt(j);
                     if (chess != 'k' && chess != 'K' && chess != 'Q' && chess != 'q' && chess != 'B' && chess != 'b' &&
                             chess != 'R' && chess != 'r' && chess != 'P' && chess != 'p' && chess != 'N' && chess != 'n' && chess != '_'){
-                        JOptionPane.showMessageDialog(null, "棋子并非六种之一，棋子并非黑白棋子");
+                        JOptionPane.showMessageDialog(null, "棋子并非六种之一，棋子并非黑白棋子","提示",JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                 }

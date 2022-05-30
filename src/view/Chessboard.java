@@ -33,6 +33,7 @@ public class Chessboard extends JComponent {
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
 
+    protected CurrentPlayerLabel currentPlayerLabel;
 
     public Chessboard(int width, int height) {
         setLayout(null); // Use absolute layout.
@@ -88,6 +89,7 @@ public class Chessboard extends JComponent {
 
     public void swapChessComponents(ChessComponent chess1, ChessComponent chess2) {
         // Note that chess1 has higher priority, 'destroys' chess2 if exists.
+        ChessComponent IsKing = chess2;
         if (!(chess2 instanceof EmptySlotComponent)) {
             remove(chess2);
             add(chess2 = new EmptySlotComponent(chess2.getChessboardPoint(), chess2.getLocation(), clickController, CHESS_SIZE));
@@ -100,6 +102,20 @@ public class Chessboard extends JComponent {
 
         chess1.repaint();
         chess2.repaint();
+        if (IsKing instanceof KingChessComponent){
+            String str;
+            str = IsKing.getChessColor() == ChessColor.BLACK ? "白方获胜！" : "黑方获胜";
+            int select = JOptionPane.showOptionDialog(null, str, "胜负判定", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,   null, new String[]{"再来一局","关闭游戏"}, "再来一局");
+            if(select == 0){
+                RemoveChessComponents();
+                newGame();
+                swapColor();
+            }else if(select==1){
+                    // TODO Auto-generated method stub
+                System.exit(0);
+            }
+        }
+
     }
 
     public void initiateEmptyChessboard() {
@@ -112,6 +128,8 @@ public class Chessboard extends JComponent {
 
     public void swapColor() {
         currentColor = currentColor == ChessColor.BLACK ? ChessColor.WHITE : ChessColor.BLACK;
+        //此处切换label文字
+        currentPlayerLabel.CurrentPlayerColor(currentColor);
     }
 
     private void initRookOnBoard(int row, int col, ChessColor color) {
@@ -182,6 +200,9 @@ public class Chessboard extends JComponent {
                 }
             }
         }
+        currentColor = chessData.get(8).equals("Black") ? ChessColor.BLACK : ChessColor.WHITE;
+        //此处切换label文字
+        currentPlayerLabel.CurrentPlayerColor(currentColor);
     }
 
     public void RemoveChessComponents(){
@@ -221,5 +242,9 @@ public class Chessboard extends JComponent {
         //king
         initKingOnBoard(0,4,ChessColor.BLACK);
         initKingOnBoard(CHESSBOARD_SIZE - 1, 4, ChessColor.WHITE);
+
+        currentColor = ChessColor.WHITE;
+        //此处切换label文字
+        currentPlayerLabel.CurrentPlayerColor(currentColor);
     }
 }

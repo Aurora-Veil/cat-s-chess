@@ -13,6 +13,10 @@ import java.io.IOException;
  */
 public abstract class ChessComponent extends JComponent {
 
+    public static void changeChessBoardColor(Color[] backgroundColors) {
+        BACKGROUND_COLORS = backgroundColors;
+    }
+
     /**
      * CHESSGRID_SIZE: 主要用于确定每个棋子在页面中显示的大小。
      * <br>
@@ -21,8 +25,11 @@ public abstract class ChessComponent extends JComponent {
      * 因此每个棋子占用的形状是一个正方形，大小是50*50
      */
 
-//    private static final Dimension CHESSGRID_SIZE = new Dimension(1080 / 4 * 3 / 8, 1080 / 4 * 3 / 8);
-    private static final Color[] BACKGROUND_COLORS = {Color.WHITE, Color.BLACK};
+    //    private static final Dimension CHESSGRID_SIZE = new Dimension(1080 / 4 * 3 / 8, 1080 / 4 * 3 / 8);
+        static Color purple = new Color(166,141,193);
+        static Color purple2 = new Color(192,173,211);
+    private static Color[] BACKGROUND_COLORS = {Color.WHITE, Color.BLACK};
+
     /**
      * handle click event
      */
@@ -128,5 +135,6 @@ public abstract class ChessComponent extends JComponent {
         Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
         g.setColor(squareColor);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        //画出背景色
     }
 }
