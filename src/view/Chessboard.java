@@ -336,6 +336,14 @@ public class Chessboard extends JComponent {
             JOptionPane.showMessageDialog(null,"没有步骤可以悔棋啦！","提示",JOptionPane.ERROR_MESSAGE);
             return;
         }
+        for (int i = 0; i < 8; i ++){
+            for (int j = 0; j < 8; j ++){
+                if (chessComponents[i][j].isSelected()){
+                    JOptionPane.showMessageDialog(null,"还有棋子处于选中状态！","提示",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
         int souX = recorder.get(recorder.size() - 1).getSourceX();
         int desX = recorder.get(recorder.size() - 1).getDesX();
         int souY = recorder.get(recorder.size() - 1).getSourceY();
