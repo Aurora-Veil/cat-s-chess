@@ -123,6 +123,7 @@ public class Chessboard extends JComponent {
             int select = JOptionPane.showOptionDialog(null, str, "胜负判定", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                     new ImageIcon("./images/label-icon.png"), new String[]{"再来一局","关闭游戏"}, "再来一局");
             if(select == 0){
+                chess1.setSelected(false);
                 RemoveChessComponents();
                 newGame();
                 swapColor();
