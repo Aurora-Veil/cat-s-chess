@@ -7,6 +7,7 @@ import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -211,7 +212,7 @@ public class PawnChessComponent extends ChessComponent{
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(pawnImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
+        if (isSelected() && hasMouse) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
             List<ChessboardPoint> canShow = canMoveToList();
@@ -223,6 +224,7 @@ public class PawnChessComponent extends ChessComponent{
             }
             Chessboard.MusicPlay yin = new Chessboard.MusicPlay("./src/灵动的按下按钮音效_1_1.WAV");
             yin.musicMain(1);
+            System.out.println("play music");
         }
     }
 
@@ -239,5 +241,29 @@ public class PawnChessComponent extends ChessComponent{
             return true;
         }
         return false;
+    }
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
     }
 }

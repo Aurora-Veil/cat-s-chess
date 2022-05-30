@@ -6,13 +6,15 @@ import controller.ClickController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.util.List;
 
 /**
  * 这个类是一个抽象类，主要表示8*8棋盘上每个格子的棋子情况，当前有两个子类继承它，分别是EmptySlotComponent(空棋子)和RookChessComponent(车)。
  */
-public abstract class ChessComponent extends JComponent {
+public abstract class ChessComponent extends JComponent implements MouseMotionListener, MouseListener {
 
     public static void changeChessBoardColor(Color[] backgroundColors) {
         BACKGROUND_COLORS = backgroundColors;
@@ -36,6 +38,7 @@ public abstract class ChessComponent extends JComponent {
      */
     protected ClickController clickController;
     protected String name;
+    protected boolean hasMouse = false;
 
     public abstract List<ChessboardPoint> canMoveToList();
 
@@ -63,6 +66,8 @@ public abstract class ChessComponent extends JComponent {
         this.chessColor = chessColor;
         this.selected = false;
         this.clickController = clickController;
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
     }
 
     public ChessboardPoint getChessboardPoint() {
@@ -108,13 +113,30 @@ public abstract class ChessComponent extends JComponent {
     @Override
     protected void processMouseEvent(MouseEvent e) {
         super.processMouseEvent(e);
-
         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
             System.out.printf("Click [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
             clickController.onClick(this);
         }
+        if (e.getID() == MouseEvent.MOUSE_ENTERED) {
+            System.out.printf("Enter [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
+            hasMouse = true;
+            this.repaint();
+        }
+        if (e.getID() == MouseEvent.MOUSE_EXITED) {
+            System.out.printf("Exit [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
+            hasMouse = false;
+            this.repaint();
+        }
     }
-
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+        hasMouse = true;
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+        hasMouse = false;
+    }
     /**
      * @param chessboard  棋盘
      * @param destination 目标位置，如(0, 0), (0, 7)等等
@@ -145,6 +167,13 @@ public abstract class ChessComponent extends JComponent {
         g.setColor(squareColor);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         //画出背景色
+        if(hasMouse){
+            g.setColor(Color.lightGray);
+            g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        } else {
+            g.setColor(squareColor);
+            g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        }
         if (path){
             g.setColor(Color.gray);
             g.drawOval(0, 0, this.getWidth(), this.getHeight());
