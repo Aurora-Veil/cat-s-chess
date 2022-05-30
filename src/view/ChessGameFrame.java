@@ -49,6 +49,7 @@ public class ChessGameFrame extends JFrame {
         addSaveButton();
         addLoadButton();
         addRestartButton();
+        addRetractButton();
     }
 
 
@@ -81,7 +82,8 @@ public class ChessGameFrame extends JFrame {
 
     private void addChangeSkinButton() {
         JButton button = new JButton("更换皮肤");
-        button.addActionListener((e) -> {int select = JOptionPane.showOptionDialog(this, "请选择皮肤", "皮肤更改", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,   null, new String[]{"经典","清新可爱风","宝可梦"}, "经典");
+        button.addActionListener((e) -> {int select = JOptionPane.showOptionDialog(this, "请选择皮肤", "皮肤更改", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                new ImageIcon("./images/item521.png"), new String[]{"经典","清新可爱风","宝可梦"}, "经典");
         if(select==1){
             changeBackgroundToPicture(1);
             Color purple = new Color(192,173,211);
@@ -98,7 +100,7 @@ public class ChessGameFrame extends JFrame {
             ChessComponent.changeChessBoardColor(RedAndWhite);
         }
         });
-        button.setLocation(HEIGTH, HEIGTH / 10 + 120);
+        button.setLocation(HEIGTH, HEIGTH / 10 + 100);
         button.setSize(200, 60);
         button.setFont(new Font("宋体", Font.BOLD, 20));
         add(button);
@@ -106,7 +108,7 @@ public class ChessGameFrame extends JFrame {
 
     private void addSaveButton() {
         JButton button = new JButton("保存游戏");
-        button.setLocation(HEIGTH, HEIGTH / 10 + 240);
+        button.setLocation(HEIGTH, HEIGTH / 10 + 200);
         button.setSize(200, 60);
         button.setFont(new Font("宋体", Font.BOLD, 20));
         add(button);
@@ -119,7 +121,7 @@ public class ChessGameFrame extends JFrame {
 
     private void addLoadButton() {
         JButton button = new JButton("加载游戏");
-        button.setLocation(HEIGTH, HEIGTH / 10 + 360);
+        button.setLocation(HEIGTH, HEIGTH / 10 + 300);
         button.setSize(200, 60);
         button.setFont(new Font("宋体", Font.BOLD, 20));
         add(button);
@@ -132,7 +134,7 @@ public class ChessGameFrame extends JFrame {
 
     private void addRestartButton() {
         JButton button = new JButton("重新开始");
-        button.setLocation(HEIGTH, HEIGTH / 10 + 480);
+        button.setLocation(HEIGTH, HEIGTH / 10 + 400);
         button.setSize(200, 60);
         button.setFont(new Font("宋体", Font.BOLD, 20));
         add(button);
@@ -140,6 +142,19 @@ public class ChessGameFrame extends JFrame {
         button.addActionListener(e -> {
             System.out.println("Click restart");
             gameController.RestartGame();
+        });
+    }
+
+    private void addRetractButton() {
+        JButton button = new JButton("悔棋");
+        button.setLocation(HEIGTH, HEIGTH / 10 + 500);
+        button.setSize(200, 60);
+        button.setFont(new Font("宋体", Font.BOLD, 20));
+        add(button);
+
+        button.addActionListener(e -> {
+            System.out.println("Click retract");
+            gameController.getChessboard().RetractChess();
         });
     }
     public void setBackground(int index){

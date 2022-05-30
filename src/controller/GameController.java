@@ -13,6 +13,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+
 public class GameController {
     private Chessboard chessboard;
 
@@ -47,7 +49,7 @@ public class GameController {
                 JOptionPane.showMessageDialog(null, "棋盘并非8*8","提示",JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (chessData.size() != 9 || !(chessData.get(8).equals("Black") || chessData.get(8).equals("White"))){
+            if (chessData.size() < 9 || !(chessData.get(8).equals("Black") || chessData.get(8).equals("White"))){
                 JOptionPane.showMessageDialog(null, "导入数据只有棋盘，没有下一步行棋的方的提示","提示",JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -80,10 +82,14 @@ public class GameController {
             proDatas.append(line).append("\n");
         }
         if (chessboard.getCurrentColor() == ChessColor.BLACK){
-            proDatas.append("Black");
+            proDatas.append("Black").append("\n");
         }
         else {
-            proDatas.append("White");
+            proDatas.append("White").append("\n");
+        }
+        //增加写出步骤过程
+        for (int i = 0; i < chessboard.getRecorder().size(); i ++){
+            proDatas.append(chessboard.getRecorder().get(i).toString()).append("\n");
         }
         //创建文件选择器
         JFileChooser fileChooser = new JFileChooser();
@@ -102,11 +108,13 @@ public class GameController {
         }
         else if (select == JFileChooser.CANCEL_OPTION) return;
         if(fName == null || fName.trim().length() == 0){
-            JOptionPane.showMessageDialog(null, "文件名为空！");
+            JOptionPane.showMessageDialog(null, "文件名为空！","提示",JOptionPane.ERROR_MESSAGE);
         }
         try {
+            assert file != null;
             if(file.exists()) {//若选择已有文件----询问是否要覆盖
-                int i = JOptionPane.showConfirmDialog(null, "该文件已经存在，确定要覆盖吗？");
+                ImageIcon icon = new ImageIcon("./images/item000.png");
+                int i = JOptionPane.showConfirmDialog(null, "该文件已经存在，确定要覆盖吗？","提示", JOptionPane.YES_NO_OPTION,INFORMATION_MESSAGE,icon);
                 if(i == JOptionPane.YES_OPTION) fName = fName.substring(0,fName.length() - 4);
                 else return;
             }

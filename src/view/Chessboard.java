@@ -1,6 +1,7 @@
 package view;
 
 
+import controller.ChessRecorder;
 import model.*;
 import controller.ClickController;
 
@@ -34,6 +35,12 @@ public class Chessboard extends JComponent {
     private final int CHESS_SIZE;
 
     protected CurrentPlayerLabel currentPlayerLabel;
+
+    private List<ChessRecorder> recorder = new ArrayList<>();
+
+    public List<ChessRecorder> getRecorder() {
+        return recorder;
+    }
 
     public Chessboard(int width, int height) {
         setLayout(null); // Use absolute layout.
@@ -90,6 +97,8 @@ public class Chessboard extends JComponent {
     public void swapChessComponents(ChessComponent chess1, ChessComponent chess2) {
         // Note that chess1 has higher priority, 'destroys' chess2 if exists.
         ChessComponent IsKing = chess2;
+        ChessRecorder step = new ChessRecorder(chess1.getChessboardPoint().getX(),chess1.getChessboardPoint().getY(),chess1.getName().charAt(0),
+                chess2.getChessboardPoint().getX(),chess2.getChessboardPoint().getY(),chess2.getName().charAt(0),currentColor);
         if (!(chess2 instanceof EmptySlotComponent)) {
             remove(chess2);
             add(chess2 = new EmptySlotComponent(chess2.getChessboardPoint(), chess2.getLocation(), clickController, CHESS_SIZE));
@@ -102,21 +111,26 @@ public class Chessboard extends JComponent {
         if (IsKing instanceof KingChessComponent){
             String str;
             str = IsKing.getChessColor() == ChessColor.BLACK ? "白方获胜！" : "黑方获胜";
-            int select = JOptionPane.showOptionDialog(null, str, "胜负判定", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,   null, new String[]{"再来一局","关闭游戏"}, "再来一局");
+            int select = JOptionPane.showOptionDialog(null, str, "胜负判定", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    new ImageIcon("./images/label-icon.png"), new String[]{"再来一局","关闭游戏"}, "再来一局");
             if(select == 0){
                 RemoveChessComponents();
                 newGame();
                 swapColor();
+                return;
             } else if(select==1){
                 // TODO Auto-generated method stub
                 System.exit(0);
             }
+            step.setSpecial("end");
         }
         if ((chess1 instanceof PawnChessComponent) && (chess1.getChessboardPoint().getX() == 0 || chess1.getChessboardPoint().getX() == 7)){
             PawnChange(chess1);
+            step.setSpecial("change pawn");
         }
-        chess1.repaint();
-        chess2.repaint();
+        recorder.add(step);
+        chessComponents[row1][col1].repaint();
+        chessComponents[row2][col2].repaint();
     }
 
     public void initiateEmptyChessboard() {
@@ -204,9 +218,19 @@ public class Chessboard extends JComponent {
         currentColor = chessData.get(8).equals("Black") ? ChessColor.BLACK : ChessColor.WHITE;
         //此处切换label文字
         currentPlayerLabel.CurrentPlayerColor(currentColor);
+        if (chessData.size() == 9){
+            JOptionPane.showMessageDialog(null,"没有行棋步骤！","提示",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        for (int i = 9; i < chessData.size(); i ++){
+            String step = chessData.get(i);
+            ChessColor color = step.charAt(13) == 'b' ? ChessColor.BLACK : ChessColor.WHITE;
+            recorder.add(new ChessRecorder((int)step.charAt(2),(int)step.charAt(4),step.charAt(6),(int)step.charAt(8),(int)step.charAt(10),step.charAt(12),color));
+        }
     }
 
     public void RemoveChessComponents(){
+        recorder.clear();
         for (int i = 0; i < 8 ; i ++){
             for (int j = 0; j < 8 ; j ++){
                 chessComponents[i][j].setVisible(false);
@@ -251,32 +275,82 @@ public class Chessboard extends JComponent {
 
     public void PawnChange(ChessComponent chess1){
         int select = JOptionPane.showOptionDialog(null, "请你选择想变成的棋子", "兵的升变",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,   null, new String[]{"车","马","象","后"}, "车");
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon("./images/item000.png"), new String[]{"车","马","象","后"}, "车");
         switch (select) {
             case 0 -> {
                 remove(chess1);
-                add(chess1 = new RookChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
-                chess1.repaint();
+                add(chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()] = new RookChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()].repaint();
             }
             case 1 -> {
                 remove(chess1);
-                add(chess1 = new KnightChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
-                chess1.repaint();
+                add(chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()] = new KnightChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()].repaint();
             }
             case 2 -> {
                 remove(chess1);
-                add(chess1 = new BishopChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
-                chess1.repaint();
+                add(chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()] = new BishopChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()].repaint();
             }
             case 3 -> {
                 remove(chess1);
-                add(chess1 = new QueenChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
-                chess1.repaint();
+                add(chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()] = new QueenChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chessComponents[chess1.getChessboardPoint().getX()][chess1.getChessboardPoint().getY()].repaint();
             }
             case JOptionPane.CLOSED_OPTION -> {
                 JOptionPane.showMessageDialog(null,"兵必须升变","提示",JOptionPane.ERROR_MESSAGE);
                 PawnChange(chess1);
             }
         }
+    }
+
+    public void RetractChess(){
+        if (recorder.size() == 0){
+            JOptionPane.showMessageDialog(null,"没有步骤可以悔棋啦！","提示",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int souX = recorder.get(recorder.size() - 1).getSourceX();
+        int desX = recorder.get(recorder.size() - 1).getDesX();
+        int souY = recorder.get(recorder.size() - 1).getSourceY();
+        int desY = recorder.get(recorder.size() - 1).getDesY();
+        chessComponents[souX][souY].setVisible(false);
+        remove(chessComponents[souX][souY]);
+        switch (recorder.get(recorder.size() - 1).getSourceName()) {
+            case 'K' -> initKingOnBoard(souX,souY,ChessColor.BLACK);
+            case 'k' -> initKingOnBoard(souX,souY,ChessColor.WHITE);
+            case 'Q' -> initQueenOnBoard(souX,souY,ChessColor.BLACK);
+            case 'q' -> initQueenOnBoard(souX,souY,ChessColor.WHITE);
+            case 'B' -> initBishopOnBoard(souX,souY,ChessColor.BLACK);
+            case 'b' -> initBishopOnBoard(souX,souY,ChessColor.WHITE);
+            case 'N' -> initKnightOnBoard(souX,souY,ChessColor.BLACK);
+            case 'n' -> initKnightOnBoard(souX,souY,ChessColor.WHITE);
+            case 'R' -> initRookOnBoard(souX,souY,ChessColor.BLACK);
+            case 'r' -> initRookOnBoard(souX,souY,ChessColor.WHITE);
+            case 'P' -> initPawnOnBoard(souX,souY,ChessColor.BLACK);
+            case 'p' -> initPawnOnBoard(souX,souY,ChessColor.WHITE);
+        }
+        chessComponents[desX][desY].setVisible(false);
+        remove(chessComponents[desX][desY]);
+        switch (recorder.get(recorder.size() - 1).getDesName()) {
+            case 'K' -> initKingOnBoard(desX,desY,ChessColor.BLACK);
+            case 'k' -> initKingOnBoard(desX,desY,ChessColor.WHITE);
+            case 'Q' -> initQueenOnBoard(desX,desY,ChessColor.BLACK);
+            case 'q' -> initQueenOnBoard(desX,desY,ChessColor.WHITE);
+            case 'B' -> initBishopOnBoard(desX,desY,ChessColor.BLACK);
+            case 'b' -> initBishopOnBoard(desX,desY,ChessColor.WHITE);
+            case 'N' -> initKnightOnBoard(desX,desY,ChessColor.BLACK);
+            case 'n' -> initKnightOnBoard(desX,desY,ChessColor.WHITE);
+            case 'R' -> initRookOnBoard(desX,desY,ChessColor.BLACK);
+            case 'r' -> initRookOnBoard(desX,desY,ChessColor.WHITE);
+            case 'P' -> initPawnOnBoard(desX,desY,ChessColor.BLACK);
+            case 'p' -> initPawnOnBoard(desX,desY,ChessColor.WHITE);
+            case '_' ->{
+                ChessComponent chessComponent = new EmptySlotComponent(new ChessboardPoint(desX,desY), calculatePoint(desX,desY), clickController, CHESS_SIZE);
+                chessComponent.setVisible(true);
+                putChessOnBoard(chessComponent);
+            }
+        }
+        recorder.remove(recorder.size() - 1);
+        swapColor();
     }
 }
