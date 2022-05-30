@@ -15,6 +15,7 @@ public class Main {
         /**
          * 音乐播放方法
          */
+        //背景音乐
         public static void playMusic(String path){
             try {
                 music = AudioSystem.getClip(); // 获取可用于播放音频文件或音频流的数据流
