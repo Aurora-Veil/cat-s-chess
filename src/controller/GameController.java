@@ -28,6 +28,14 @@ public class GameController {
     }
 
     public void loadGameFromFile() {
+        for (int i = 0; i < 8; i ++){
+            for (int j = 0; j < 8; j ++){
+                if (chessboard.getChessComponents()[i][j].isSelected()){
+                    JOptionPane.showMessageDialog(null,"还有棋子处于选中状态！","提示",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("加载游戏");
 //        FileNameExtensionFilter filter = new FileNameExtensionFilter("标签文件(*.txt)", "txt");
@@ -82,6 +90,14 @@ public class GameController {
 
     public void writeGameToFile(){
         //存储棋盘，样例同as5
+        for (int i = 0; i < 8; i ++){
+            for (int j = 0; j < 8; j ++){
+                if (chessboard.getChessComponents()[i][j].isSelected()){
+                    JOptionPane.showMessageDialog(null,"还有棋子处于选中状态！","提示",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
         StringBuilder proDatas = new StringBuilder();
         for (int i = 0; i < 8; i ++){
             StringBuilder line = new StringBuilder();

@@ -212,7 +212,7 @@ public class PawnChessComponent extends ChessComponent{
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(pawnImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected() && hasMouse) { // Highlights the model if selected.
+        if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
             List<ChessboardPoint> canShow = canMoveToList();
@@ -223,8 +223,10 @@ public class PawnChessComponent extends ChessComponent{
                 }
             }
             Chessboard.MusicPlay yin = new Chessboard.MusicPlay("./src/灵动的按下按钮音效_1_1.WAV");
-            yin.musicMain(1);
-            System.out.println("play music");
+            if (hasMouse){
+                yin.musicMain(1);
+                System.out.println("play music");
+            }
         }
     }
 

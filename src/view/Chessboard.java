@@ -263,6 +263,14 @@ public class Chessboard extends JComponent {
     }
 
     public void RemoveChessComponents(){
+        for (int i = 0; i < 8; i ++){
+            for (int j = 0; j < 8; j ++){
+                if (chessComponents[i][j].isSelected()){
+                    JOptionPane.showMessageDialog(null,"还有棋子处于选中状态！","提示",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
         recorder.clear();
         for (int i = 0; i < 8 ; i ++){
             for (int j = 0; j < 8 ; j ++){
