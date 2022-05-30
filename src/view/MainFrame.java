@@ -22,12 +22,12 @@ public class MainFrame extends JFrame implements ActionListener{
         jp.setOpaque(false); //把JPanel设置为透明 这样就不会遮住后面的背景 这样你就能在JPanel随意加组件了
         c.add(jp);
         setSize(getWidth(), getHeight());
-        setVisible(true);
+//        setVisible(true);
 
         addExitButton();
         addStartButton();
         addLabel();
-        this.setVisible(true);  //可视化
+        setVisible(true);  //可视化
     }
     public void actionPerformed(ActionEvent e) {
         this.setVisible(false);  //窗体不可见

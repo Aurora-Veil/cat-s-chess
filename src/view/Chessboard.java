@@ -113,23 +113,7 @@ public class Chessboard extends JComponent {
             }
         }
         if ((chess1 instanceof PawnChessComponent) && (chess1.getChessboardPoint().getX() == 0 || chess1.getChessboardPoint().getX() == 7)){
-            Object[] options = {"车", "马","象", "后"};
-            String s = (String) JOptionPane.showInputDialog(null, "选择你想变成的棋子", "兵的升变",
-                    JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-            switch (s){
-                case "车":
-                    remove(chess1);
-                    add(chess1 = new RookChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
-                case "马":
-                    remove(chess1);
-                    add(chess1 = new KnightChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
-                case "象":
-                    remove(chess1);
-                    add(chess1 = new BishopChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
-                case "后":
-                    remove(chess1);
-                    add(chess1 = new QueenChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
-            }
+            PawnChange(chess1);
         }
         chess1.repaint();
         chess2.repaint();
@@ -263,5 +247,36 @@ public class Chessboard extends JComponent {
         currentColor = ChessColor.WHITE;
         //此处切换label文字
         currentPlayerLabel.CurrentPlayerColor(currentColor);
+    }
+
+    public void PawnChange(ChessComponent chess1){
+        int select = JOptionPane.showOptionDialog(null, "请你选择想变成的棋子", "兵的升变",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,   null, new String[]{"车","马","象","后"}, "车");
+        switch (select) {
+            case 0 -> {
+                remove(chess1);
+                add(chess1 = new RookChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chess1.repaint();
+            }
+            case 1 -> {
+                remove(chess1);
+                add(chess1 = new KnightChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chess1.repaint();
+            }
+            case 2 -> {
+                remove(chess1);
+                add(chess1 = new BishopChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chess1.repaint();
+            }
+            case 3 -> {
+                remove(chess1);
+                add(chess1 = new QueenChessComponent(chess1.getChessboardPoint(), chess1.getLocation(), chess1.getChessColor(), clickController, CHESS_SIZE));
+                chess1.repaint();
+            }
+            case JOptionPane.CLOSED_OPTION -> {
+                JOptionPane.showMessageDialog(null,"兵必须升变","提示",JOptionPane.ERROR_MESSAGE);
+                PawnChange(chess1);
+            }
+        }
     }
 }
