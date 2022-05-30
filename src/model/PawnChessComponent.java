@@ -9,6 +9,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PawnChessComponent extends ChessComponent{
     /**
@@ -59,6 +61,83 @@ public class PawnChessComponent extends ChessComponent{
         }
     }
 
+    @Override
+    public List<ChessboardPoint> canMoveToList() {
+        List<ChessboardPoint> canMoveToList = new ArrayList<>();
+        ChessComponent[][] chessboard = clickController.getChessboard().getChessComponents();
+        int x = this.getChessboardPoint().getX();
+        int y = this.getChessboardPoint().getY();
+        switch (this.getChessColor()) {
+            case WHITE -> {
+                if (x == 6) {
+                    if (chessboard[x-1][y].getChessColor() == ChessColor.NONE && chessboard[x-2][y].getChessColor() == ChessColor.NONE) {
+                        canMoveToList.add(this.getChessboardPoint().offset(-2, 0));
+                    }
+                }
+                if (this.getChessboardPoint().offset(-1, 0) != null) {
+                    if (chessboard[x-1][y].getChessColor() == ChessColor.NONE) {
+                        canMoveToList.add(this.getChessboardPoint().offset(-1, 0));
+                    }
+                }
+                if (this.getChessboardPoint().offset(-1, -1) != null){
+                    if (chessboard[x-1][y-1].getChessColor() == ChessColor.BLACK) {
+                        canMoveToList.add(this.getChessboardPoint().offset(-1, -1));
+                    }
+                }
+                if (this.getChessboardPoint().offset(-1, 1) != null){
+                    if (chessboard[x-1][y+1].getChessColor() == ChessColor.BLACK) {
+                        canMoveToList.add(this.getChessboardPoint().offset(-1, 1));
+                    }
+                }
+                if (x == 3 && clickController.getChessboard().getRecorder().size() != 0){
+                    ChessRecorder lastStep = clickController.getChessboard().getRecorder().get(clickController.getChessboard().getRecorder().size() - 1);
+                    if (chessboard[x-1][y-1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'P'
+                            && lastStep.getSourceX() - lastStep.getDesX() == -2 && lastStep.getSourceY() == y-1 ){
+                        canMoveToList.add(this.getChessboardPoint().offset(-1, -1));
+                    }
+                    if (chessboard[x-1][y+1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'P'
+                            && lastStep.getSourceX() - lastStep.getDesX() == -2 && lastStep.getSourceY() == y+1 ){
+                        canMoveToList.add(this.getChessboardPoint().offset(-1, 1));
+                    }
+                }
+            }
+            case BLACK -> {
+                if (x == 1) {
+                    if (chessboard[x+1][y].getChessColor() == ChessColor.NONE && chessboard[x+2][y].getChessColor() == ChessColor.NONE) {
+                        canMoveToList.add(this.getChessboardPoint().offset(2, 0));
+                    }
+                }
+                if (this.getChessboardPoint().offset(1, 0) != null) {
+                    if (chessboard[x+1][y].getChessColor() == ChessColor.NONE) {
+                        canMoveToList.add(this.getChessboardPoint().offset(1, 0));
+                    }
+                }
+                if (this.getChessboardPoint().offset(1, -1) != null){
+                    if (chessboard[x+1][y-1].getChessColor() == ChessColor.WHITE) {
+                        canMoveToList.add(this.getChessboardPoint().offset(1, -1));
+                    }
+                }
+                if (this.getChessboardPoint().offset(1, 1) != null){
+                    if (chessboard[x+1][y+1].getChessColor() == ChessColor.WHITE) {
+                        canMoveToList.add(this.getChessboardPoint().offset(1, 1));
+                    }
+                }
+                if (x == 4 && clickController.getChessboard().getRecorder().size() != 0){
+                    ChessRecorder lastStep = clickController.getChessboard().getRecorder().get(clickController.getChessboard().getRecorder().size() - 1);
+                    if (chessboard[x+1][y-1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'p'
+                            && lastStep.getSourceX() - lastStep.getDesX() == 2 && lastStep.getSourceY() == y-1 ){
+                        canMoveToList.add(this.getChessboardPoint().offset(1, -1));
+                    }
+                    if (chessboard[x+1][y+1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'p'
+                            && lastStep.getSourceX() - lastStep.getDesX() == 2 && lastStep.getSourceY() == y+1 ){
+                        canMoveToList.add(this.getChessboardPoint().offset(1, 1));
+                    }
+                }
+            }
+        }
+        return canMoveToList;
+    }
+
     public PawnChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
         initiatePawnImage(color);
@@ -100,9 +179,7 @@ public class PawnChessComponent extends ChessComponent{
                 return true;
             }
             else if (chessColor == ChessColor.WHITE){
-                if (destination.getX() - source.getX() == -1 && chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent){
-                    return true;
-                }
+                return destination.getX() - source.getX() == -1 && chessComponents[destination.getX()][destination.getY()] instanceof EmptySlotComponent;
             }
         }
         //再写吃子
@@ -137,7 +214,14 @@ public class PawnChessComponent extends ChessComponent{
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
-            Chessboard.MusicPlay yin= new Chessboard.MusicPlay("./src/灵动的按下按钮音效_1_1.WAV");
+            List<ChessboardPoint> canShow = canMoveToList();
+            if (canShow.size() > 0) {
+                for (ChessboardPoint chessboardPoint : canShow) {
+                    clickController.getChessboard().getChessComponents()[chessboardPoint.getX()][chessboardPoint.getY()].path = true;
+                    clickController.getChessboard().getChessComponents()[chessboardPoint.getX()][chessboardPoint.getY()].repaint();
+                }
+            }
+            Chessboard.MusicPlay yin = new Chessboard.MusicPlay("./src/灵动的按下按钮音效_1_1.WAV");
             yin.musicMain(1);
         }
     }

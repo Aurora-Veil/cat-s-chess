@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 这个类是一个抽象类，主要表示8*8棋盘上每个格子的棋子情况，当前有两个子类继承它，分别是EmptySlotComponent(空棋子)和RookChessComponent(车)。
@@ -35,6 +36,8 @@ public abstract class ChessComponent extends JComponent {
      */
     protected ClickController clickController;
     protected String name;
+
+    public abstract List<ChessboardPoint> canMoveToList();
 
     @Override
     public String getName() {
@@ -128,6 +131,12 @@ public abstract class ChessComponent extends JComponent {
      */
     public abstract void loadResource() throws IOException;
 
+    protected boolean path = false;
+
+    public void setPath(boolean path) {
+        this.path = path;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponents(g);
@@ -136,5 +145,9 @@ public abstract class ChessComponent extends JComponent {
         g.setColor(squareColor);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         //画出背景色
+        if (path){
+            g.setColor(Color.gray);
+            g.drawOval(0, 0, this.getWidth(), this.getHeight());
+        }
     }
 }

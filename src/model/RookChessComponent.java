@@ -8,6 +8,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类表示国际象棋里面的车
@@ -59,6 +61,34 @@ public class RookChessComponent extends ChessComponent {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<ChessboardPoint> canMoveToList() {
+        List<ChessboardPoint> canMoveToList = new ArrayList<>();
+        canMoveToList.addAll(this.Move(1,0));
+        canMoveToList.addAll(this.Move(-1,0));
+        canMoveToList.addAll(this.Move(0,-1));
+        canMoveToList.addAll(this.Move(0,1));
+        return canMoveToList;
+    }
+
+    public List<ChessboardPoint> Move(int dx,int dy){
+        List<ChessboardPoint> canMoveTo = new ArrayList<>();
+        int x = this.getChessboardPoint().getX();
+        int y = this.getChessboardPoint().getY();
+        int changeX = dx;
+        int changeY = dy;
+        while (this.getChessboardPoint().offset(dx, dy) != null){
+            if (clickController.getChessboard().getChessComponents()[x+dx][y+dy].getChessColor() != this.getChessColor()){
+                canMoveTo.add(new ChessboardPoint(x+dx,y+dy));
+            }
+            if (clickController.getChessboard().getChessComponents()[x+dx][y+dy].getChessColor() != ChessColor.NONE){
+                break;
+            }
+            dx += changeX; dy += changeY;
+        }
+        return canMoveTo;
     }
 
     public RookChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
@@ -114,6 +144,13 @@ public class RookChessComponent extends ChessComponent {
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
+            List<ChessboardPoint> canShow = canMoveToList();
+            if (canShow.size() > 0) {
+                for (ChessboardPoint chessboardPoint : canShow) {
+                    clickController.getChessboard().getChessComponents()[chessboardPoint.getX()][chessboardPoint.getY()].path = true;
+                    clickController.getChessboard().getChessComponents()[chessboardPoint.getX()][chessboardPoint.getY()].repaint();
+                }
+            }
             Chessboard.MusicPlay yin= new Chessboard.MusicPlay("./src/灵动的按下按钮音效_1_1.WAV");
             yin.musicMain(1);
         }

@@ -28,6 +28,12 @@ public class ClickController {
                 ChessComponent recordFirst = first;
                 first = null;
                 recordFirst.repaint();
+                for (int i = 0; i < chessboard.getChessComponents().length; i++) {
+                    for (int j = 0; j < chessboard.getChessComponents()[i].length; j++) {
+                        chessboard.getChessComponents()[i][j].setPath(false);
+                        chessboard.getChessComponents()[i][j].repaint();
+                    }
+                }
             } else if (handleSecond(chessComponent)) {
                 //repaint in swap chess method.
                 chessboard.swapChessComponents(first, chessComponent);

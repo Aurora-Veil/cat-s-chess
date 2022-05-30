@@ -163,6 +163,12 @@ public class Chessboard extends JComponent {
 
     public void swapColor() {
         currentColor = currentColor == ChessColor.BLACK ? ChessColor.WHITE : ChessColor.BLACK;
+        for (int i = 0; i < chessComponents.length; i++) {
+            for (int j = 0; j < chessComponents[i].length; j++) {
+                chessComponents[i][j].setPath(false);
+                chessComponents[i][j].repaint();
+            }
+        }
         //此处切换label文字
         currentPlayerLabel.CurrentPlayerColor(currentColor);
     }
