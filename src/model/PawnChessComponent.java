@@ -2,6 +2,7 @@ package model;
 
 import controller.ChessRecorder;
 import controller.ClickController;
+import view.Chessboard;
 import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
@@ -136,6 +137,8 @@ public class PawnChessComponent extends ChessComponent{
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
+            Chessboard.MusicPlay yin= new Chessboard.MusicPlay("./src/灵动的按下按钮音效_1_1.WAV");
+            yin.musicMain(1);
         }
     }
 
