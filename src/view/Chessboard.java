@@ -99,9 +99,6 @@ public class Chessboard extends JComponent {
         chessComponents[row1][col1] = chess1;
         int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
         chessComponents[row2][col2] = chess2;
-
-        chess1.repaint();
-        chess2.repaint();
         if (IsKing instanceof KingChessComponent){
             String str;
             str = IsKing.getChessColor() == ChessColor.BLACK ? "白方获胜！" : "黑方获胜";
@@ -110,12 +107,32 @@ public class Chessboard extends JComponent {
                 RemoveChessComponents();
                 newGame();
                 swapColor();
-            }else if(select==1){
-                    // TODO Auto-generated method stub
+            } else if(select==1){
+                // TODO Auto-generated method stub
                 System.exit(0);
             }
         }
-
+        if ((chess1 instanceof PawnChessComponent) && (chess1.getChessboardPoint().getX() == 0 || chess1.getChessboardPoint().getX() == 7)){
+            Object[] options = {"车", "马","象", "后"};
+            String s = (String) JOptionPane.showInputDialog(null, "选择你想变成的棋子", "兵的升变",
+                    JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            switch (s){
+                case "车":
+                    remove(chess1);
+                    add(chess1 = new RookChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
+                case "马":
+                    remove(chess1);
+                    add(chess1 = new KnightChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
+                case "象":
+                    remove(chess1);
+                    add(chess1 = new BishopChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
+                case "后":
+                    remove(chess1);
+                    add(chess1 = new QueenChessComponent(chess1.getChessboardPoint(),chess1.getLocation(),chess1.getChessColor(),clickController,CHESS_SIZE));
+            }
+        }
+        chess1.repaint();
+        chess2.repaint();
     }
 
     public void initiateEmptyChessboard() {
