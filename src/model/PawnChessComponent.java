@@ -92,11 +92,11 @@ public class PawnChessComponent extends ChessComponent{
                 }
                 if (x == 3 && clickController.getChessboard().getRecorder().size() != 0){
                     ChessRecorder lastStep = clickController.getChessboard().getRecorder().get(clickController.getChessboard().getRecorder().size() - 1);
-                    if (chessboard[x-1][y-1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'P'
+                    if (y >= 1 && chessboard[x-1][y-1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'P'
                             && lastStep.getSourceX() - lastStep.getDesX() == -2 && lastStep.getSourceY() == y-1 ){
                         canMoveToList.add(this.getChessboardPoint().offset(-1, -1));
                     }
-                    if (chessboard[x-1][y+1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'P'
+                    if (y <= 6 && chessboard[x-1][y+1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'P'
                             && lastStep.getSourceX() - lastStep.getDesX() == -2 && lastStep.getSourceY() == y+1 ){
                         canMoveToList.add(this.getChessboardPoint().offset(-1, 1));
                     }
@@ -125,11 +125,11 @@ public class PawnChessComponent extends ChessComponent{
                 }
                 if (x == 4 && clickController.getChessboard().getRecorder().size() != 0){
                     ChessRecorder lastStep = clickController.getChessboard().getRecorder().get(clickController.getChessboard().getRecorder().size() - 1);
-                    if (chessboard[x+1][y-1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'p'
+                    if (y >= 1 && chessboard[x+1][y-1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'p'
                             && lastStep.getSourceX() - lastStep.getDesX() == 2 && lastStep.getSourceY() == y-1 ){
                         canMoveToList.add(this.getChessboardPoint().offset(1, -1));
                     }
-                    if (chessboard[x+1][y+1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'p'
+                    if (y <= 6 && chessboard[x+1][y+1].getChessColor() == ChessColor.NONE && lastStep.getSourceName() == 'p'
                             && lastStep.getSourceX() - lastStep.getDesX() == 2 && lastStep.getSourceY() == y+1 ){
                         canMoveToList.add(this.getChessboardPoint().offset(1, 1));
                     }
